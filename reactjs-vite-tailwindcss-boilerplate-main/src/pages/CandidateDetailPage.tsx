@@ -31,7 +31,7 @@ const CandidateDetailPage: React.FC = () => {
         const res = await fetch(`http://localhost:5000/api/interviewer/candidate/${userId}`);
         const d = await res.json();
         setData(d);
-        console.log("Fetched detail:", d);
+      //  console.log("Fetched detail:", d);
       } catch (err) {
         console.error("Error loading detail", err);
       } finally {

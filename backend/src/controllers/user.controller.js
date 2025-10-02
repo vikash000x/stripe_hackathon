@@ -21,7 +21,7 @@ console.log('File received:');
     const resumeUrltt = await uploadResumeToCloudinary(file);
 
 
-    console.log('Resume uploaded to Cloudinary:', resumeUrltt);
+   // console.log('Resume uploaded to Cloudinary:', resumeUrltt);
     // 2️⃣ Parse resume PDF
    // const { name, email, phone } = await parseResume(file);
 

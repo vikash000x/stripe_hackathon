@@ -100,7 +100,7 @@ Return **only valid JSON**. No extra fields, no comments outside JSON objects.
 console.log("Prompt to Gemini:");
   const raw = await callGemini(prompt, 1200);
 
-  console.log("Gemini raw response:", raw);
+//  console.log("Gemini raw response:", raw);
 
   // Depending on provider, extract text -> parse JSON
   const text = raw?.text || raw?.output || JSON.stringify(raw);
@@ -114,7 +114,7 @@ console.log("Prompt to Gemini:");
     else throw new Error('Failed to parse Gemini response as JSON: ' + text.slice(0, 1000));
   }
 
-  console.log("Parsed questions:", parsed);
+  //console.log("Parsed questions:", parsed);
 
   // Basic normalization & safety: ensure timeAllowedSec present
   const normalized = parsed.map(q => {
@@ -140,7 +140,7 @@ console.log("Prompt to Gemini:");
     };
   });
 
-  console.log("Normalized questions:", normalized);
+  //console.log("Normalized questions:", normalized);
 
   return normalized;
 }

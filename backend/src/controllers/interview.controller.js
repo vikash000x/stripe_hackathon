@@ -10,8 +10,8 @@ export async function generateAssessment(req, res) {
   try {
     const { userId, specs } = req.body;
 
-    console.log('Received specs:', specs);
-    console.log('User ID:', userId);
+    // console.log('Received specs:', specs);
+    // console.log('User ID:', userId);
     if (!userId || !Array.isArray(specs) || specs.length !== 6) {
       return res.status(400).json({ error: 'userId and 6 specs required' });
     }

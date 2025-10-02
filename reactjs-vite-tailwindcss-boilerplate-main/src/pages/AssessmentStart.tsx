@@ -161,7 +161,7 @@ dispatch(pauseAssessment());
       method: "POST",
     });
     const result = await res.json();
-    console.log("Finish result:", result);
+   // console.log("Finish result:", result);
 
     if (result.assessment) {
       // 📝 Dispatch entire payload to include aiResult too
