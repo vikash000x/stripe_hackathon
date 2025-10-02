@@ -15,7 +15,7 @@ const DashboardPage: React.FC = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/interviewer/dashboard?search=${search}&sort=${sort}&page=${page}`
+        `https://stripe-hackathon.onrender.com/api/interviewer/dashboard?search=${search}&sort=${sort}&page=${page}`
       );
       const data = await res.json();
       setCandidates(data.data || []);

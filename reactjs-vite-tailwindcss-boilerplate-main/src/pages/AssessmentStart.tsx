@@ -42,7 +42,7 @@ export default function AssessmentStart() {
 
     const fetchAssessment = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/assessments/${id}`);
+        const res = await fetch(`https://stripe-hackathon.onrender.com/assessments/${id}`);
         const data = await res.json();
         if (data?.assessment) {
           const questionsWithTimer = data.assessment.qaData.map((q: any) => ({
@@ -157,7 +157,7 @@ dispatch(pauseAssessment());
   // ✅ FINAL FINISH LOGIC — fetch result and persist
  const handleFinish = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/api/assessments/${id}/finish`, {
+    const res = await fetch(`https://stripe-hackathon.onrender.com/api/assessments/${id}/finish`, {
       method: "POST",
     });
     const result = await res.json();

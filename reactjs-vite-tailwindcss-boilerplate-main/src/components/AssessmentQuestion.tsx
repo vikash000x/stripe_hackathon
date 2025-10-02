@@ -15,7 +15,7 @@ const AssessmentQuestion: React.FC<Props> = ({ question, index }) => {
 
   const saveAnswerToBackend = async (answer: string | string[]) => {
     try {
-      await fetch(`http://localhost:5000/api/assessments/${id}/answer`, {
+      await fetch(`https://stripe-hackathon.onrender.com/api/assessments/${id}/answer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

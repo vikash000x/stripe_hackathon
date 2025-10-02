@@ -28,7 +28,7 @@ const CandidateDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/interviewer/candidate/${userId}`);
+        const res = await fetch(`https://stripe-hackathon.onrender.com/api/interviewer/candidate/${userId}`);
         const d = await res.json();
         setData(d);
       //  console.log("Fetched detail:", d);

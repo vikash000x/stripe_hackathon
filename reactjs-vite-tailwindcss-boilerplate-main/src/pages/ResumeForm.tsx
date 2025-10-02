@@ -51,7 +51,7 @@ const ResumeForm = () => {
       backendForm.append("email", formData.email);
       backendForm.append("phone", formData.phone);
 
-      const res = await fetch("http://localhost:5000/api/upload-resume", {
+      const res = await fetch("https://stripe-hackathon.onrender.com/api/upload-resume", {
         method: "POST",
         body: backendForm,
       });

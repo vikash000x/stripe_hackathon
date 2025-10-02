@@ -30,7 +30,7 @@ export default function AssessmentIntro() {
         { type: "TEXT", difficulty: "hard" },
       ];
 
-      const res = await fetch("http://localhost:5000/api/assessments/generate", {
+      const res = await fetch("https://stripe-hackathon.onrender.com/api/assessments/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, specs }),
