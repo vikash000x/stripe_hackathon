@@ -14,31 +14,51 @@ async function callGemini(prompt, maxTokens = 800) {
   if (!GEMINI_API_URL || !GEMINI_API_KEY) {
     throw new Error('Gemini API config missing in env');
   }
+
+  console.log("Calling Gemini with prompt...");
+
+  const url = `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`;
+
   const body = {
-    prompt,
-    max_tokens: maxTokens,
-    temperature: 0.2,
-    // adapt to the API signature your provider expects
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: prompt }]
+      }
+    ],
+    generationConfig: {
+      maxOutputTokens: maxTokens,
+      temperature: 0.2
+    }
   };
 
-  const res = await fetch(GEMINI_API_URL, {
+  const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${GEMINI_API_KEY}`
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
+
+  console.log("Gemini response status:", res.status);
 
   if (!res.ok) {
     const txt = await res.text();
     throw new Error(`Gemini error: ${res.status} ${txt}`);
   }
+
   const data = await res.json();
-  // The shape depends on your LLM. Adjust to extract text.
-  // Assuming `data.text` contains the response body.
-  return data;
+
+  // ✅ Extract actual text from Gemini's structured response
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) {
+    console.error("Unexpected Gemini response format:", data);
+    throw new Error("Gemini response did not contain any text.");
+  }
+
+  return { text };  // <-- Return clean text only
 }
+
 
 /**
  * Generate 6 questions given types/difficulties
@@ -47,9 +67,10 @@ async function callGemini(prompt, maxTokens = 800) {
  */
 export async function generateQuestions(specs = []) {
   // Build a prompt that asks the model to return strict JSON array.
-  const instruction = `
-You are an expert full-stack interviewer for React/Node roles.
-Produce a JSON array of question objects exactly in this shape:
+  console.log("inside aiservice");
+const instruction = `
+You are an expert full-stack interviewer for React, Node.js, and JavaScript roles.
+Produce a JSON array of question objects exactly in this shape (do NOT add extra fields):
 [
   {
     "id": "<unique id>",
@@ -58,18 +79,28 @@ Produce a JSON array of question objects exactly in this shape:
     "difficulty": 1,                // 1..6
     "timeAllowedSec": 20,           // compute from difficulty: 1-2 ->20, 3-4 ->40, 5-6 ->120
     "points": 10,
-    "options": ["optA","optB"]     // only for MCQ/MSQ
+    "options": ["optA","optB"],    // only for MCQ/MSQ
     "correctAnswer": ["A"],        // array (single element for MCQ)
     "exemplarAnswer": "<short model answer>"
   }
 ]
-Return only valid JSON. Use the provided ${specs} to craft each question. Keep question length concise.
+
+Rules to ensure fresh questions:
+- Each question must be **new and unique** (never repeated from previous batches).
+- Include a balanced mix of React (~40%), Node.js (~30%), and JavaScript (~30%) questions.
+- Randomize difficulty levels between 1 and 6.
+- Keep questions concise and suitable for technical interviews.
+- Use the provided ${JSON.stringify(specs)} if relevant.
+Return **only valid JSON**. No extra fields, no comments outside JSON objects.
 `;
+
 
   const specsText = JSON.stringify(specs);
   const prompt = `${instruction}\n\nSPEC: ${specsText}\n\nRespond with JSON only.`;
-
+console.log("Prompt to Gemini:");
   const raw = await callGemini(prompt, 1200);
+
+  console.log("Gemini raw response:", raw);
 
   // Depending on provider, extract text -> parse JSON
   const text = raw?.text || raw?.output || JSON.stringify(raw);
@@ -82,6 +113,8 @@ Return only valid JSON. Use the provided ${specs} to craft each question. Keep q
     if (m) parsed = JSON.parse(m[0]);
     else throw new Error('Failed to parse Gemini response as JSON: ' + text.slice(0, 1000));
   }
+
+  console.log("Parsed questions:", parsed);
 
   // Basic normalization & safety: ensure timeAllowedSec present
   const normalized = parsed.map(q => {
@@ -106,6 +139,8 @@ Return only valid JSON. Use the provided ${specs} to craft each question. Keep q
       feedback: null
     };
   });
+
+  console.log("Normalized questions:", normalized);
 
   return normalized;
 }

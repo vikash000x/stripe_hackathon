@@ -50,17 +50,18 @@ export async function getDashboard(req, res) {
 export async function getCandidateDetail(req, res) {
   try {
     const { userId } = req.params;
-
+console.log("UserID:", userId);
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { assessments: true }
+      include: { assessment: true }
     });
 
+    console.log("User:", user);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     // Assuming a single assessment per user for this MVP, return the latest assessment
-    const assessment = user.assessments && user.assessments.length ? user.assessments[0] : null;
-
+   const assessment = user.assessment || null;
+  console.log("Assessment:", assessment);
     res.json({ user, assessment });
   } catch (err) {
     console.error('getCandidateDetail', err);

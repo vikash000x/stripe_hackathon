@@ -8,6 +8,10 @@ import aiService from './ai.service.js';
  */
 export async function createAssessmentForUser(userId, specs) {
   // generate questions via AI
+  console.log("inside service");
+   const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new Error(`User with id ${userId} does not exist`);
+
   const questions = await aiService.generateQuestions(specs);
 
   const assessment = await prisma.assessment.create({
@@ -46,22 +50,38 @@ export async function submitAnswer(assessmentId, index, answerPayload) {
   // auto-score MCQ/MSQ here
   let score = null;
   if (q.type === 'MCQ') {
-    const correct = q.correctAnswer && q.correctAnswer[0];
-    score = (answerPayload.userAnswer === correct) ? q.points : 0;
-    q.scoreGiven = score;
-    q.scoredBy = 'AUTO';
-    q.feedback = q.scoreGiven === q.points ? 'Correct' : 'Incorrect';
-  } else if (q.type === 'MSQ') {
-    // compute intersection fraction
-    const user = Array.isArray(answerPayload.userAnswer) ? answerPayload.userAnswer : (answerPayload.userAnswer ? [answerPayload.userAnswer] : []);
-    const correctSet = new Set(q.correctAnswer || []);
-    const matchCount = user.filter(u => correctSet.has(u)).length;
-    const scoreFraction = (correctSet.size === 0) ? 0 : (matchCount / correctSet.size);
-    score = Math.round(q.points * scoreFraction * 100) / 100;
-    q.scoreGiven = score;
-    q.scoredBy = 'AUTO';
-    q.feedback = `Matched ${matchCount}/${correctSet.size}`;
-  } else if (q.type === 'TEXT') {
+  const correct = q.correctAnswer && q.correctAnswer[0];
+  const userLetter = String.fromCharCode(65 + q.options.indexOf(answerPayload.userAnswer)); // 65 = 'A'
+  
+  score = (userLetter === correct) ? q.points : 0;
+  q.scoreGiven = score;
+  q.scoredBy = 'AUTO';
+  q.feedback = score === q.points ? 'Correct' : 'Incorrect';
+}
+  else if (q.type === 'MSQ') {
+  const user = Array.isArray(answerPayload.userAnswer) ? answerPayload.userAnswer : [];
+
+  // Convert user selected text into letters (A, B, C...)
+  const userLetters = user.map(opt => String.fromCharCode(65 + q.options.indexOf(opt)));
+
+  const correctSet = new Set(q.correctAnswer || []);
+  const userSet = new Set(userLetters);
+
+  // ✅ All-or-nothing scoring:
+  // 1. The sets must be the same size.
+  // 2. Every correct answer must be in user's answers.
+  const isExactMatch =
+    userSet.size === correctSet.size &&
+    [...correctSet].every(letter => userSet.has(letter));
+
+  score = isExactMatch ? q.points : 0;
+  q.scoreGiven = score;
+  q.scoredBy = 'AUTO';
+  q.feedback = isExactMatch
+    ? 'Correct'
+    : `Incorrect — expected ${[...correctSet].join(', ')}`;
+}
+ else if (q.type === 'TEXT') {
     // call AI to score
     const exemplar = q.exemplarAnswer || '';
     const { score: aiScore, feedback } = await aiService.scoreTextAnswer(exemplar, answerPayload.userAnswer || '');
