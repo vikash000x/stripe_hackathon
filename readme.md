@@ -46,10 +46,8 @@
 ### 🎥 Demo Video
 
 <p align="center">
-  <a href="https://youtu.be/9rmwHObbjEo" target="_blank">
-    <img src="https://img.youtube.com/vi/9rmwHObbjEo/0.jpg" 
-         alt="Watch the demo" 
-         width="720" />
+  <a href="https://x.com/vikash_sinha_/status/1973874019419238490" target="_blank">
+       <h3>click here to get the video </h3>
   </a>
 </p>
 ---
