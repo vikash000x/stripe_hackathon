@@ -74,11 +74,7 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
           {(q.exemplarAnswer || q.type !== "TEXT") && (
             <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-700 italic">
               <span className="font-semibold">Ideal answer:</span>{" "}
-              {q.type === "TEXT"
-                ? q.exemplarAnswer
-                : q.options
-                ? q.options.join(", ")
-                : q.exemplarAnswer || "N/A"}
+              { q.exemplarAnswer || "N/A"}
             </div>
           )}
         </div>

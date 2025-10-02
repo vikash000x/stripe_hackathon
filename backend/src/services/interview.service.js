@@ -21,6 +21,7 @@ export async function createAssessmentForUser(userId, specs) {
       totalScore: 0
     }
   });
+  console.log("assessment",assessment);
   return assessment;
 }
 

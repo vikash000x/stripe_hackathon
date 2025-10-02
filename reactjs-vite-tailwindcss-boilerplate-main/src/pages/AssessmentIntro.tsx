@@ -24,7 +24,7 @@ export default function AssessmentIntro() {
       const specs: QuestionSpec[] = [
         { type: "MCQ", difficulty: "easy" },
         { type: "MCQ", difficulty: "easy" },
-        { type: "MCQ", difficulty: "medium" },
+        { type: "MSQ", difficulty: "medium" },
         { type: "MSQ", difficulty: "medium" },
         { type: "TEXT", difficulty: "hard" },
         { type: "TEXT", difficulty: "hard" },
