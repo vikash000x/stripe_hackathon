@@ -43,7 +43,10 @@
 
 ## 🖼 Preview
 
-> Add screenshots or GIFs here (e.g., `docs/screenshot-chat.png`, `docs/screenshot-dashboard.png`)
+### 🎥 Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/kCeSD5q0MyE/0.jpg)](https://youtu.be/kCeSD5q0MyE)
+
 
 
 ---
@@ -140,7 +143,7 @@ Follow these steps to set up the project locally.
 
 ### 1️⃣ Clone the repo
 ```bash
-git clone https://github.com/your-username/interviewapp.git
+git clone https://github.com/vikash000x/interviewapp.git
 cd interviewapp
 ```
 
