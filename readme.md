@@ -45,10 +45,13 @@
 
 ### 🎥 Demo Video
 
-[![Watch the demo](https://img.youtube.com/vi/kCeSD5q0MyE/0.jpg)](https://youtu.be/kCeSD5q0MyE)
-
-
-
+<p align="center">
+  <a href="https://youtu.be/kCeSD5q0MyE" target="_blank">
+    <img src="https://img.youtube.com/vi/kCeSD5q0MyE/0.jpg" 
+         alt="Watch the demo" 
+         width="720" />
+  </a>
+</p>
 ---
 
 ## 🧰 Tech Stack
